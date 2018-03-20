@@ -1,0 +1,72 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">Upload profile image</h5>
+      <p class="modal-paragraph">Image must be saved in .jpg or .png format and cannot exceed 1mb in file size.</p>
+    </div>
+    <div class="text-danger login-form-error" *ngIf="photoValidation.unsupportedFormat">
+      <small> The image is in an invalid format. </small>
+    </div>
+    <div class="text-danger login-form-error" *ngIf="photoValidation.largerThanAllowed">
+      <small> The image is larger than 1mb. </small>
+    </div>
+    <div *ngIf="!uploadedToModal">
+      <div ng2FileDrop (onFileDrop)="fileDrop($event)" [uploader]="uploader" class="modal-body pointer" (click)=hiddenFileInput.click()>
+        Upload your photo here
+      </div>
+      <div style="margin-left: 25px">
+        <input type="file" class="hideFileInputButton" ng2FileSelect [uploader]="uploader" (change)="fileSelect($event)" #hiddenFileInput/>
+      </div>
+    </div>
+    <div *ngIf="uploadedToModal" class="modal-body uploaded">
+      <div class="file-row">
+        <div class="cell">
+          <div class="rounded-circle profilephoto-uploaded">
+            <img class="rounded-circle img-fluid uploadedphoto mx-auto" src="{{modalPhotoUrl}}">
+          </div>
+        </div>
+        <div class="cell file-name">
+          <span>{{modalPhotoFileName}}</span>
+        </div>
+        <div class="cell file-close">
+          <a class="btn close" href="javascript:void(0)" role="button" (click)="removePhoto()">
+            <i class="icon-close"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-start">
+      <button type="button" class="btn btn-primary btn-modal btn-block" (click)="confirmUpload()" [disabled]="!uploadedToModal">
+        <i class="icon-cloud-upload"></i> Upload</button>
+      <button type="button" class="btn btn-secondary btn-modal" data-dismiss="modal" (click)="cancel()">
+        <i class="icon-close"></i> Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="!photoUrl && !photoModalType" class="rounded-circle profilephoto mx-auto">
+  <i class="icon-user"></i>
+  <a class="btn rounded-circle addphoto" href="javascript:void(0)" role="button" (click)="open(content)">
+    <i class="icon-plus"></i>
+  </a>
+</div>
+<div *ngIf="photoUrl && !photoModalType" class="rounded-circle profilephoto mx-auto">
+  <img class="rounded-circle img-fluid uploadedphoto mx-auto" src="{{photoUrl}}">
+  <a href="javascript:void(0)" (click)="open(content)" class="btn rounded-circle addphoto">
+    <i class="material-icons">create</i>
+  </a>
+</div>
+
+<!-- ACHIEVEMENT HTML TEMPLATE -->
+<div *ngIf="!photoUrl && photoModalType" class="rounded-circle achievementphoto">
+    <img class="rounded-circle img-fluid uploadedphoto mx-auto" src="assets/add_achievement_placeholder.svg">
+    <a href="javascript:void(0)" class="btn rounded-circle addachievement" (click)="open(content)">
+        <i class="icon-plus"></i>
+    </a>
+</div>
+<div *ngIf="photoUrl && photoModalType" class="rounded-circle achievementphoto">
+  <img class="rounded-circle img-fluid uploadedphoto mx-auto" src="{{photoUrl}}">
+  <a href="javascript:void(0)" (click)="open(content)" class="btn rounded-circle addachievement">
+    <i class="material-icons">create</i>
+  </a>
+</div>
